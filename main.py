@@ -62,9 +62,12 @@ print(valid_set["label"].value_counts())
 OUTPUT_TYPE = OutputType(False, 'binary')
 UNIQUE_LABELS = [0, 1]
 OUTPUT_SPEC = OutputSpec(OUTPUT_TYPE, UNIQUE_LABELS)
-if not os.path.exists(pretrained_model_file_path):
-    pretrained_model_generator, input_encoder = load_pretrained_model(local_model_dump_dir=model_dir)
 
+if not os.path.isdir(model_dir):
+    os.mkdir(model_dir)
+if not os.path.exists(pretrained_model_file_path):
+    pretrained_model_generator, input_encoder = load_pretrained_model(local_model_dump_dir=model_dir,
+                                                                      local_model_dump_file_name='epoch_92400_sample_23500000.pkl')
 else:
     pretrained_model_generator, input_encoder = load_model_from_local()
 
@@ -110,4 +113,6 @@ F1_Score = (2 * Precision * Recall) / (Precision + Recall)
 result_df = pd.DataFrame([SP, SN, ACC, MCC, F1_Score])
 result_df = result_df.T
 result_df.columns = ['SP', 'SN', 'ACC', 'MCC', 'F1-Score']
+if not os.path.isdir(results_dir):
+    os.mkdir(results_dir)
 result_df.to_csv(results_dir + '\independent_test.csv')
