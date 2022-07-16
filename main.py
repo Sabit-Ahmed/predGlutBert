@@ -2,7 +2,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from IPython.display import display
 from proteinbert import OutputType, OutputSpec, FinetuningModelGenerator, load_pretrained_model, finetune, \
-    evaluate_by_len
+    evaluate_by_len, conv_and_global_attention_model
+from proteinbert.model_generation import load_pretrained_model_from_dump
 from proteinbert.conv_and_global_attention_model import get_model_with_hidden_layers_as_outputs
 from tensorflow import keras
 import math
@@ -14,10 +15,27 @@ current_dir = os.getcwd()
 dataset_dir = current_dir + '\data'
 dataset_file_path = os.path.join(dataset_dir, '%s.xlsx' % fileName)
 model_dir = current_dir + "\proteinbert_models"
-
+pretrained_model_file_path = model_dir + '\epoch_92400_sample_23500000.pkl'
 final_model_file_path = model_dir + 'GlutBertModel.sav'
 
 results_dir = current_dir + r'\results'
+
+def load_model_from_local():
+    create_model_function = conv_and_global_attention_model.create_model
+    create_model_kwargs = {}
+    optimizer_class = keras.optimizers.Adam
+    lr = 2e-04
+    other_optimizer_kwargs = {}
+    annots_loss_weight = 1
+    load_optimizer_weights = False
+
+    model_generator, input_encoder = load_pretrained_model_from_dump(pretrained_model_file_path, create_model_function,
+                                    create_model_kwargs=create_model_kwargs,
+                                    optimizer_class=optimizer_class, lr=lr, \
+                                    other_optimizer_kwargs=other_optimizer_kwargs,
+                                    annots_loss_weight=annots_loss_weight,
+                                    load_optimizer_weights=load_optimizer_weights)
+    return model_generator, input_encoder
 
 print(dataset_file_path)
 dataset = pd.read_excel(dataset_file_path, header=[8]).dropna().drop_duplicates()
@@ -44,8 +62,11 @@ print(valid_set["label"].value_counts())
 OUTPUT_TYPE = OutputType(False, 'binary')
 UNIQUE_LABELS = [0, 1]
 OUTPUT_SPEC = OutputSpec(OUTPUT_TYPE, UNIQUE_LABELS)
-#if not os.path.exists(pretrained_model_file_path):
-pretrained_model_generator, input_encoder = load_pretrained_model(local_model_dump_dir=model_dir)
+if not os.path.exists(pretrained_model_file_path):
+    pretrained_model_generator, input_encoder = load_pretrained_model(local_model_dump_dir=model_dir)
+
+else:
+    pretrained_model_generator, input_encoder = load_model_from_local()
 
 # get_model_with_hidden_layers_as_outputs gives the model output access to the hidden layers (on top of the output)
 model_generator = FinetuningModelGenerator(pretrained_model_generator, OUTPUT_SPEC,
