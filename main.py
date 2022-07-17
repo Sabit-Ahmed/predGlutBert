@@ -16,7 +16,7 @@ dataset_dir = current_dir + '\data'
 dataset_file_path = os.path.join(dataset_dir, '%s.xlsx' % fileName)
 model_dir = current_dir + "\proteinbert_models"
 pretrained_model_file_path = model_dir + '\epoch_92400_sample_23500000.pkl'
-final_model_file_path = model_dir + 'GlutBertModel.sav'
+final_model_file_path = model_dir + '\GlutBertModel.sav'
 
 results_dir = current_dir + r'\results'
 
