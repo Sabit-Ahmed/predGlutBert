@@ -64,7 +64,7 @@ pickle.dump(model_generator, open(final_model_file_path, 'wb'))
 results, confusion_matrix = evaluate_by_len(model_generator, input_encoder, OUTPUT_SPEC, test_set['seq'],
                                             test_set['label'],
                                             start_seq_len=512, start_batch_size=32)
-print('Test-set performance:')
+# print('Test-set performance:')
 display(results)
 
 print('Confusion matrix:')
