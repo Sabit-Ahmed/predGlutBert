@@ -1,4 +1,3 @@
-import os
 import pickle
 
 from proteinbert import FinetuningModelGenerator, finetune, OutputSpec, OutputType
@@ -7,14 +6,11 @@ from tensorflow import keras
 
 from experiments import utils, model_utils
 
-current_dir = os.getcwd()
-model_dir = current_dir + "\proteinbert_models"
-final_model_file_path = model_dir + '\GlutBertModel.sav'
 out_spec = OutputSpec(OutputType(False, 'binary'), [0, 1])
 
 
-def training():
-    dataset = utils.read_file('data', 'xlsx', 'multiLabelDataset')
+def training(dataset_path, saved_model_file_path):
+    dataset = utils.read_file(dataset_path, 'xlsx')
 
     train_set_primary, test_set = utils.split_data(data=dataset, shuffle=True, test_size=0.1, random_state=42)
     train_set, valid_set = utils.split_data(data=train_set_primary, stratify=train_set_primary['label'], test_size=0.1,
@@ -39,5 +35,5 @@ def training():
              lr_with_frozen_pretrained_layers=1e-02, n_final_epochs=1, final_seq_len=1024, final_lr=1e-05,
              callbacks=training_callbacks)
 
-    pickle.dump(model_generator, open(final_model_file_path, 'wb'))
+    pickle.dump(model_generator, open(saved_model_file_path, 'wb'))
     print('model training is done!')

@@ -1,5 +1,4 @@
 import math
-import os
 import pickle
 
 import pandas as pd
@@ -22,7 +21,7 @@ def read_file(file_path, file_type):
 
 
 def load_sav_file(file_path):
-    model = pickle.load(file_path)
+    model = pickle.load(open(file_path, 'rb'))
     return model
 
 
@@ -32,7 +31,7 @@ def split_data(data=None, test_size=0.1, random_state=0, shuffle=True, stratify=
     return train_set, valid_set
 
 
-def get_performance(results_dir, results, confusion_matrix):
+def get_performance(ind_test_result_path, results, confusion_matrix):
     print('Test-set performance:')
     display(results)
 
@@ -54,6 +53,6 @@ def get_performance(results_dir, results, confusion_matrix):
     result_df = pd.DataFrame([SP, SN, ACC, MCC, F1_Score])
     result_df = result_df.T
     result_df.columns = ['SP', 'SN', 'ACC', 'MCC', 'F1-Score']
-    if not os.path.isdir(results_dir):
-        os.mkdir(results_dir)
-    result_df.to_csv(results_dir + '\independent_test.csv')
+    # if not os.path.isdir(results_dir):
+    #     os.mkdir(results_dir)
+    result_df.to_csv(ind_test_result_path)
