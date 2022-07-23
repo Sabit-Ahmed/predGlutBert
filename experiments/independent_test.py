@@ -9,9 +9,9 @@ from experiments.model_utils import evaluate_by_len
 out_spec = OutputSpec(OutputType(False, 'binary'), [0, 1])
 
 
-def independent_test(ind_test_set_path, dataset_path, saved_model_path, ind_test_result_path):
+def independent_test(ind_test_set_path, dataset_path, ind_test_file_type, saved_model_path, ind_test_result_path):
     if not os.path.exists(ind_test_set_path):
-        glut_data = utils.read_file(file_path=dataset_path, file_type='xlsx')
+        glut_data = utils.read_file(file_path=dataset_path, file_type=ind_test_file_type)
         train_set_primary, test_set = utils.split_data(data=glut_data, shuffle=True, test_size=0.1, random_state=42)
         test_set.to_csv(ind_test_set_path)
     else:
