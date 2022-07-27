@@ -67,4 +67,5 @@ def get_performance(ind_test_result_path, results, confusion_matrix):
 #      0  1
 # 0  596  3
 # 1   54  0
+
 # SP=0.994991652754591 SN=0.0 ACC=0.9127105666156202 precision=0.0
