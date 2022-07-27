@@ -10,7 +10,8 @@ current_dir = os.getcwd()
 
 
 def load_proteinbert_model():
-    model_dir = current_dir + "\proteinbert_models"
+    print(os.getcwd())
+    model_dir = current_dir + "\models\protein_bert_model"
     pretrained_model_file_path = model_dir + "\epoch_92400_sample_23500000.pkl"
 
     if not os.path.isdir(model_dir):

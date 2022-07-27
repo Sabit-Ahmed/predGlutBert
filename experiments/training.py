@@ -9,12 +9,17 @@ from experiments import utils, model_utils
 out_spec = OutputSpec(OutputType(False, 'binary'), [0, 1])
 
 
-def training(dataset_path, saved_model_file_path):
-    dataset = utils.read_file(dataset_path, 'xlsx')
-
-    train_set_primary, test_set = utils.split_data(data=dataset, shuffle=True, test_size=0.1, random_state=42)
-    train_set, valid_set = utils.split_data(data=train_set_primary, stratify=train_set_primary['label'], test_size=0.1,
-                                            random_state=0)
+def training(dataset_path=None, saved_model_file_path=None, train_set=None):
+    if dataset_path is not None:
+        dataset = utils.read_file(dataset_path, 'xlsx')
+        train_set_primary, test_set = utils.split_data(data=dataset, shuffle=True, test_size=0.1, random_state=42)
+        train_set, valid_set = utils.split_data(data=train_set_primary, stratify=train_set_primary['label'],
+                                                test_size=0.1,
+                                                random_state=0)
+    else:
+        train_set, valid_set = utils.split_data(data=train_set, stratify=train_set['label'],
+                                                test_size=0.1,
+                                                random_state=0)
 
     pretrained_model_generator, input_encoder = model_utils.load_proteinbert_model()
 

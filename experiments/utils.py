@@ -48,6 +48,7 @@ def get_performance(ind_test_result_path, results, confusion_matrix):
     ACC = (TP + TN) / (TP + TN + FP + FN)
     Precision = TP / (TP + FP)
     MCC = ((TP * TN) - (FP * FN)) / math.sqrt((TP + FN) * (TN + FN) * (TP + FP) * (TN + FP))
+    print(f"SP={SP} SN={SN} ACC={ACC} precision={Precision}")
     F1_Score = (2 * Precision * Recall) / (Precision + Recall)
 
     result_df = pd.DataFrame([SP, SN, ACC, MCC, F1_Score])
@@ -56,3 +57,14 @@ def get_performance(ind_test_result_path, results, confusion_matrix):
     # if not os.path.isdir(results_dir):
     #     os.mkdir(results_dir)
     result_df.to_csv(ind_test_result_path)
+
+# Test-set performance:
+#                # records       AUC
+# Model seq len
+# 512                  653  0.520033
+# All                  653  0.520033
+# Confusion matrix:
+#      0  1
+# 0  596  3
+# 1   54  0
+# SP=0.994991652754591 SN=0.0 ACC=0.9127105666156202 precision=0.0
